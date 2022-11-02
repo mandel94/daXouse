@@ -1,19 +1,19 @@
-from unicodedata import name
+import os
+
+from ...utils.immobiliare import constants
+from ...utils.immobiliare import selectors
+
 import scrapy
 
 class OnSaleSpider(scrapy.Spider):
-    """ Spider for immobiliare.com on-sale page
+    """Spider for immobiliare.com on-sale page
 
     A spider used for scraping on-sale page. This spider will parse linked
     requests. The initial request will give home listing for sale. Homes from 
     will be parsed in the order provided by the combination of ordering criteria
     (`criterio` parameter + `ordine` parameter).  
-    
-    :attribute:: name
-    :attribute:: allowed_domains
-    :method:: 
 
-    Parameters
+    Properties
     ----------
     city : str
         The city you want to access on-sale for. 
@@ -26,21 +26,33 @@ class OnSaleSpider(scrapy.Spider):
     top: int , optional
         If provided, parse only `top` results from initial list of home for sale.
         For example, if `criteria` is 'prezzo' and `ordine` is 'asc', the Spider
-        will parse only the `top` cheapest homes.
-
-    Methods
-    -------
-    start_requests()
-        Perform initial request 
-    parse()
-        Basic callback method
+        will parse only the `top` cheapest homes.        
     """
-    name = 'immobiliare_onsale'
-    allowed_domains = ['immobiliare.it']
+    name = constants.SPIDER_NAME_IMMOBILIARE_ONSALE
+    allowed_domains = constants.ALLOWED_DOMAINS_IMMOBILIARE
     
     def start_requests(self):
-        yield scrapy.Request(f'https://www.immobiliare.it/vendita-case/{self.city}/?criterio={self.criterio}')
+        '''Perform initial request
+        
+        It calls https://www.immobiliare.it/vendita-case/milano/
+        
+        Examples
+        --------
+        $ scrapy crawl immobiliare_onsale -a city=milano -a criterio=prezzo
+
+        ''' 
+        yield scrapy.Request(f'{constants.BASE_URL_IMMOBILIARE_ONSALE}/{self.city}/?criterio={self.criterio}')
     
     def parse(self, response):
-        print(self.criterio)
-        print('OK')
+        '''Basic callback method
+        
+        Returns
+        -------
+        list(str)
+            List of URLs of onsale apartment 
+        '''
+        # Use path expressions
+        result_list = response.xpath(selectors.XPATH_ONSALE_LIST_IMMOBILIARE).getall()
+        print(result_list)
+
+    
