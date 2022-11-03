@@ -22,7 +22,7 @@ validations.
 Our approach to pagination involves searching for the *next* button on the 
 scraped url, and following the response to parse the next page. 
 
-```
+```python
 import scrapy
 from pagination_demo.items import QuoteItem
 
