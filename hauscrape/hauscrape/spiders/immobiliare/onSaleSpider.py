@@ -56,3 +56,5 @@ class OnSaleSpider(scrapy.Spider):
         print(result_list)
 
     
+
+    
