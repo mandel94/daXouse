@@ -44,7 +44,12 @@ class QuotesSpider(scrapy.Spider):
             yield response.follow(next_page, callback=self.parse)
 ```
 
-
 ## Items
+Items to be loaded must be defined
+
+## Feed Exports
+Loaded Items must be serialized and stored. This is done by generating "export 
+feeds". 
+[Click here for Scrapy documentation on Feed Exports](https://docs.scrapy.org/en/latest/topics/feed-exports.html)
 
 
