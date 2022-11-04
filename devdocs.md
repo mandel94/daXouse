@@ -1,5 +1,5 @@
 ## Todos
-- [ ] [scraping-group-of-houses](###scraping-group-of-houses)
+- [ ] [scraping-group-of-houses](####scraping-group-of-houses)
 
 
 # Scraping Module
@@ -19,7 +19,7 @@
 - **onSaleSpider**: Spider for a on-sale page of a particular real estate website. It 
 returns the list of homes on-sale on a particular website.  
 
-### Spider Contracts 
+## Spider Contracts 
 We test spiders using contracts, which work by defining mock url to request, and
 are defined inline inside the docstring of the spiders' parsing methods. 
 Contract checking involves parsing the request and later checking if returned 
@@ -32,7 +32,7 @@ validations.
 - Contracts for **onSaleSpider**:
     - `parse` method:
 
-### Pagination
+## Pagination
 [Look at some pagination methods here](https://scrapeops.io/python-scrapy-playbook/scrapy-pagination-guide/)
 Our approach to pagination involves searching for the *next* button on the 
 scraped url, and following the response to parse the next page. 
@@ -134,5 +134,7 @@ feeds".
 Ideally, we would be able to track houses with daily routines. However, we need 
 to find a way to efficiently store. 
 
+
+### JSON Lines
 JSON Lines is a convenient format for storing structured data that may be 
 processed one record at a time. 
