@@ -16,7 +16,8 @@ Additional features will be integrated, such as alert systems for good buys.
 
 ### Built With
 
-* ![Scrapy]('./images/scrapy.png)
+* [Scrapy](https://scrapy.org/)
+
 
 ### License
 
