@@ -1,6 +1,7 @@
 ## Todos
 - [ ] [scraping-group-of-houses](###scraping-group-of-houses)
 - [ ] [define-collection-checks](##collection-runtime-checks)
+- [ ] [define-intrinsic-properties-interface](###interface-for-intrinsic-properties)
 
 # Scraping Module
 
@@ -94,6 +95,8 @@ extensions):
   + *living_space(m^2)*: int, no-default 
     Living space of an apartment.
     Scraped 
+  + *hasLift*: bool  
+    Has the flat complex a lift?  
   + *district*: str, no-default  
   + *sub_district*: str, no-default  
   + *address*: str, no-default  
@@ -199,7 +202,7 @@ processed one record at a time.
 
 ## Configuration Parameters
 + **DATA_COLLECTION_PERIODICITY**: datetime.timedelta.  
-  A duration expressing the difference between two date, time, or datetime 
+  A duration expressing the difference between two dates, times, or datetime 
   instances to microsecond resolution. 
 
 
@@ -257,27 +260,28 @@ be sure that:
 Let's specify here the standard for each of the intrinsic properties:  
   + *city*: lower-case string, without whitespaces.
   + *district*: lower-case string, without whitespaces.
-  + *sub_district*: 
-  + *address*
-  + *number_of_rooms* 
-  + *filter_intrinsic_prop*
-  + *floor*
-  + *agency*
+  + *sub_district*: lower-case string, without whitespaces.
+  + *address*: lower-case string, 
+  + *number_of_rooms*: integer
+  + *floor*: integer
+  + *agency*: lower-case string
   + other data that helps discriminating house listings
 
+### Interface for Intrinsic Properties
 One way to implement this standard is to provide an interface for the intrinsic
 properties that is valid independently from how that property is formatted in 
-a particular website. This interface is a dictionary, whose keys are the 
-intrinsic properties as their are found in the different data sources/websites.
-The values of the interface are the intrinsic properties that will be used by 
-hauscrape. Those value will reconcile the different formats in which we can find
-the same information to a common representation standard of that information. 
-Instad of using a chain of transformation for reconciling the string formats, 
-we manually map the set of different formats to the sub-set of standard formats.
-Applying a chain of transformation introduces a computional risk, that can 
-result in a final value that is different from the standard one. The interface 
-approach eliminates this risk altogether, applying the mapping from scraped
-values to standard values in a constrained way.
+a particular website. The interface is a dictionary, whose key/value pairs map the intrinsic 
+properties as scraped from the data sources/websites to a standard value of that
+intrinsic property, or a function that will produce that standard value as an 
+output.  Those value will reconcile the different string formats in which we can find
+the same information into a common representation standard of that information.   
+This standardization of the intrinsic properties is essential to get an 
+identifier for the house across all the websites/data sources.
+
+The interface is defined in the [`interface.py`](../hauscrape/utils/interface.py) 
+file. 
+
+
 
 ## Parallel Computing
 Here is a list of tasks which can be divided into parallel sub-task for 
