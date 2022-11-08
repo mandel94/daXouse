@@ -1,3 +1,5 @@
+# Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Scraping Module](#scraping-module)
   - [Relevant Files](#relevant-files)
     - [Utilities](#utilities)
@@ -16,11 +18,12 @@
   - [Collection-runtime Checks](#collection-runtime-checks)
 - [Configuration File](#configuration-file)
   - [Configuration Parameters](#configuration-parameters)
-- [Custom Classes](#custom-classes)
+- [Building the Interface](#building-the-interface)
 - [Utilities Functions](#utilities-functions)
   - [digest_id](#digest_id)
     - [Interface for Intrinsic Properties](#interface-for-intrinsic-properties)
   - [Parallel Computing](#parallel-computing)
+- [Testing](#testing)
 
 # Scraping Module
 
@@ -91,19 +94,20 @@ class QuotesSpider(scrapy.Spider):
 
 ## Items
 Items to be loaded must be defined. In Scrapy, the following items are supported:
-+ dictionaries
++ dictionaries:  
   Convenient and familiar
-+ Item objects
++ Item objects:  
   dict-like plus additional features
-+ dataclass objects
++ dataclass objects:  
   Class with fields pre-defined and exported by default (even if no value is 
   found)
-+ attrs objects
++ attrs objects:  
   Dataclass-like, it requires [attrs package](https://www.attrs.org/en/stable/index.html)  
 
-**`hauscrape` formats items as dataclasses**. Here is the list of items (subject to
+**`hauscrape` formats items as dataclasses**.   
+Here is the list of items (subject to
 extensions):
-+ Home
++ House  
   Fields (subject to extension):
   + *id*: str, no-default  
   + *city*: str, no-default  
@@ -129,8 +133,7 @@ extensions):
     Agency, if any, that posted the listing
 
 
-Dataclasses are defined in the items files: 
-+ [immobiliare](../hauscrape/utils/items.py) module.
+Dataclasses are defined in the [items files](../hauscrape/utils/items.py).
 
 ### Items Loaders
 As per stated in Scrapy's docs, items provide the container of scraped data,
@@ -225,10 +228,27 @@ processed one record at a time.
   instances to microsecond resolution. 
 
 
-# Custom Classes
-Custom classes are defined in [customClasses.py](../hauscrape/utils/customClasses.py)
-Here is the list of custom classes used by `hauscrape`:
-+ ...
+# Building the Interface
+Building an Interface allows for greater maintainability of a package. 
+One of the purposes of `hauscrape` is to collect data on real estate markets 
+from a variety of data sources. For each data source, a particular scraping 
+implementation must be defined, from the selectors to get the raw data, to the 
+transformations to refine the data into final values, and the functions to 
+validate those final values.  
+In python, interfaces are based on abstract methods. Those methods define 
+the blueprint for designing classes. 
+
+Interface is defined for the following functionalities:
+  + [extracting](../hauscrape/utils/refining.py) 
+  + [refining](../hauscrape/utils/refining.py)
+  + [validating](../hauscrape/utils/validations.py) 
+  
+These functionalities are unified under one unique interface, defined by 
+[`hauscrapeInterface`](../hauscrape/utils/interface.py)
+  
+Concrete classes will implement those interfaces for each data source 
+(immobiliare.it, Idealista, etc.)
+
 
 # Utilities Functions
 
@@ -301,9 +321,10 @@ The interface is defined in the [`interface.py`](../hauscrape/utils/interface.py
 file. 
 
 
-
 ## Parallel Computing
 Here is a list of tasks which can be divided into parallel sub-task for 
 improving performance:
 + [`digest_id`](##digest_id)
+
+# Testing
 

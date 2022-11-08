@@ -6,7 +6,7 @@ from utils.processors import filter_intrinsic_prop
 import pandas as pd
 
 @dataclass  
-class Home:
+class House:
     id: str
     city: str
     offered_for: Literal['for_sale', 'for_rent']
