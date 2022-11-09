@@ -87,6 +87,9 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         # https://stackoverflow.com/questions/44922961/scrapy-multiple-requests-and-fill-single-item
         yield scrapy.Request(f'{self.base_url}/{self.city}/?criterio={self.criterio}', 
                              callback=self.parse_onsale_list)
+        # Check if there is a 'Next' page
+
+        
     
     def parse_onsale_list(self, response):
         '''Basic callback method
@@ -109,18 +112,25 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
 
             houseItemLoader = HouseLoader(item=House(), response=house)
             # Get values from this house response
-            price = house.xpath(selectors.XPATH_PRICE_IMMOBILIARE)
+            title = house.xpath(selectors.XPATH_TITLE_IMMOBILIARE).get()
+            price = int(house.xpath(selectors.XPATH_PRICE_IMMOBILIARE).get())
             n_of_rooms = house.xpath(selectors.XPATH_N_OF_ROOMS_IMMOBILIARE).get()
+            living_space = house.xpath(selectors.XPATH_LIVING_SPACE_IMMOBILIARE).get()
+            bathrooms = house.xpath(selectors.XPATH_BATHROOMS_IMMOBILIARE).get()
+            agency = house.xpath(selectors.XPATH_AGENCY_IMMOBILIARE).get()
+            # Get href for following request
+            href = house.xpath(selectors.XPATH_HREF_IMMOBILIARE).get()
+
+            # Get values by requesting the house specific url
 
             # Load Item
             houseItemLoader.add_value('city', self.city)
             houseItemLoader.add_value('offered_for', 'for_sale')
             
             # Populate the HouseItem
-            print(type(house))
 
             # Add the house to the houseListItem
-            break
+
         yield house_list
 
     

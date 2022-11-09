@@ -5,23 +5,25 @@ from utils.processors import filter_intrinsic_prop
 
 @dataclass  
 class House:
-    id
-    city: str
     offered_for: Literal['for_sale', 'for_rent']
-    price: int
-    n_of_rooms: int
-    district: str
-    sub_district: str
-    address: str
-    active: bool
-    enter_date: float
-    agency: pd.Timestamp
+    id: Optional[float] = field(default=None)
+    title: Optional[str] = field(default=None)
+    city: Optional[str] = field(default=None)
+    price: Optional[str] = field(default=None)
+    n_of_rooms: Optional[int] = field(default=None)
+    living_space: Optional[int] = field(default=None)
+    bathrooms: Optional[int] = field(default=None)
+    hasLift: Optional[bool] = field(default=None)
+    hasBalcony: Optional[bool] = field(default=None)
+    hasTerrace: Optional[bool] = field(default=None)
+    district: Optional[str] = field(default=None) 
+    sub_district: Optional[str] = field(default=None)
+    address: Optional[str] = field(default=None)
+    enter_date: Optional[float] = field(default=None)
+    agency: Optional[str] = field(default=None)
+    descrizione: Optional[str] = field(default=None)  
     exit_date: Optional[float] = field(default=None)
-
-    # id = scrapy.Field(
-    #     input_processor=filter_intrinsic_prop()
-    #     output_processor=
-    # )
+    
 
 @dataclass
 class HouseList:

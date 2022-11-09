@@ -118,6 +118,8 @@ extensions):
   + *living_space(m^2)*: int, no-default 
     Living space of an apartment.
     Scraped 
+  + *bathrooms*: str  
+    How many bathrooms does the house have?
   + *hasLift*: bool  
     Has the flat complex a lift?  
   + *district*: str, no-default  
