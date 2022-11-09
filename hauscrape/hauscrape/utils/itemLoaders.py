@@ -11,6 +11,9 @@ class HouseLoader(ItemLoader):
     default_input_processor = Identity()
     
     # id processors
+    ## Convert id inputs to string 
+    id_in = MapCompose(str)
+    ## Aggregate string id inputs to get hexadecimal sha-256 digest
     id_out = get_digest()
 
     # city processors

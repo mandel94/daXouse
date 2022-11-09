@@ -23,7 +23,7 @@
   - [digest_id](#digest_id)
     - [Interface for Intrinsic Properties](#interface-for-intrinsic-properties)
   - [Parallel Computing](#parallel-computing)
-- [Testing](#testing)
+- [Tests](#tests)
 
 # Scraping Module
 
@@ -326,5 +326,8 @@ Here is a list of tasks which can be divided into parallel sub-task for
 improving performance:
 + [`digest_id`](##digest_id)
 
-# Testing
+# Tests
+  + Intrinsic properties from different web sources give the same identifier. 
+
+
 

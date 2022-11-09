@@ -1,6 +1,7 @@
 # Scrapy selectors
 XPATH_ONSALE_LIST_IMMOBILIARE = '//ul[@data-cy="result-list"]/li[@class="nd-list__item in-realEstateResults__item"]'
-
+XPATH_PRICE_IMMOBILIARE = '//li[@class="in-feat__item--main"]/text()'
+XPATH_N_OF_ROOMS_IMMOBILIARE = '//li[@aria-label="locali"]/text()'
 
 # HTML attributes
 
