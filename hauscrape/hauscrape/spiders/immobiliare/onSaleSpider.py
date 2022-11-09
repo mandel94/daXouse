@@ -6,34 +6,11 @@ from ...utils.immobiliare import constants
 from ...utils.immobiliare import selectors
 from ...utils.items import HouseList, House
 from ...utils.itemLoaders import HouseLoader
+from ..abstract import OnSaleSpider
 
 import scrapy
 import pandas as pd
-
-
-class OnSaleSpider(scrapy.Spider, ABC):
-    '''Interface for scraping house listings from real estate websites.
-    
-    Inherits from Scrapy's Spider.
-    
-    '''
-
-    def __init__(self, city:str, criterio:str, *args, **kwargs):
-        super(OnSaleSpider, self).__init__(*args, **kwargs)
-        self.city = city
-        self.criterio = criterio
-
-    @abstractproperty
-    def base_url(self):
-        '''Base URL of the website to scrape'''
-        pass
-
-    @abstractproperty
-    def xpath_onsale_list(self):
-        '''Xpath selector of the house listing'''
-        pass
      
-
 
 class ImmobiliareOnSaleSpider(OnSaleSpider):
     """Spider for immobiliare.com on-sale page.
@@ -89,8 +66,18 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
                              callback=self.parse_onsale_list)
         # Check if there is a 'Next' page
 
-        
     
+    def parse_house_page(self, response):
+        '''Parse page of single house item'''
+        self.logging.debug("Parsing house page item")
+        HouseItemLoader = HouseLoader(item=House(), response=response)
+        for k,v in response.meta.items():
+            HouseItemLoader.add_value(k, v)
+        # Finish loading House Item
+        # HouseItemLoader.add_value('test', 'test')
+        yield HouseItemLoader.load_item()
+
+
     def parse_onsale_list(self, response):
         '''Basic callback method
         
@@ -99,6 +86,7 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         list(str)
             List of URLs of onsale apartment 
         '''
+    
         houseListItem = HouseList()
         # Last update timestamp
         houseListItem['timestamp'] = time.time()
@@ -107,31 +95,27 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         house_list = response.xpath(self.xpath_onsale_list)
         # For each house Selector
         for house in house_list:
-            # Start collecting values for the item
-            # Initialize Item Loader
-
-            houseItemLoader = HouseLoader(item=House(), response=house)
-            # Get values from this house response
-            title = house.xpath(selectors.XPATH_TITLE_IMMOBILIARE).get()
-            price = int(house.xpath(selectors.XPATH_PRICE_IMMOBILIARE).get())
-            n_of_rooms = house.xpath(selectors.XPATH_N_OF_ROOMS_IMMOBILIARE).get()
-            living_space = house.xpath(selectors.XPATH_LIVING_SPACE_IMMOBILIARE).get()
-            bathrooms = house.xpath(selectors.XPATH_BATHROOMS_IMMOBILIARE).get()
-            agency = house.xpath(selectors.XPATH_AGENCY_IMMOBILIARE).get()
+            # Start collecting values to load on Item
+            data=dict()
+            data['city'] = self.city
+            data['offered_for'] = 'for_sale'
+            data['title'] = house.xpath(selectors.XPATH_TITLE_IMMOBILIARE).get()
+            data['price'] = int(house.xpath(selectors.XPATH_PRICE_IMMOBILIARE).get())
+            data['n_of_rooms'] = house.xpath(selectors.XPATH_N_OF_ROOMS_IMMOBILIARE).get()
+            data['living_space'] = house.xpath(selectors.XPATH_LIVING_SPACE_IMMOBILIARE).get()
+            data['bathrooms'] = house.xpath(selectors.XPATH_BATHROOMS_IMMOBILIARE).get()
+            data['agency'] = house.xpath(selectors.XPATH_AGENCY_IMMOBILIARE).get()
             # Get href for following request
             href = house.xpath(selectors.XPATH_HREF_IMMOBILIARE).get()
+            # Request house-specific url to end values collection
+            yield scrapy.Request(href, 
+                                 callback=parse_house_page, 
+                                 meta=data)
 
-            # Get values by requesting the house specific url
+    
 
-            # Load Item
-            houseItemLoader.add_value('city', self.city)
-            houseItemLoader.add_value('offered_for', 'for_sale')
-            
-            # Populate the HouseItem
 
-            # Add the house to the houseListItem
 
-        yield house_list
 
     
 
