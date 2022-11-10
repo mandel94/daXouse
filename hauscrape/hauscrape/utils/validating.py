@@ -13,6 +13,10 @@ satisfy the expectation, the validation function will return true.
 
 '''
 
+
+def validateCity(city: str) -> str:
+    '''Check if city is standard-compliant'''
+
 def validateFloor(floor: str) -> str:
     '''Floor is an intrinsic property'''
     firstElement = floor[0]

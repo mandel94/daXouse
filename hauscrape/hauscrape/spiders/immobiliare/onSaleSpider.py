@@ -2,8 +2,8 @@ import os
 from abc import ABC, abstractproperty
 import time
 
-from ...utils.immobiliare import constants
-from ...utils.immobiliare import selectors
+from ...utils import constants
+from ...utils import selectors
 from ...utils.items import HouseList, House
 from ...utils.itemLoaders import HouseLoader
 from ..abstract import OnSaleSpider

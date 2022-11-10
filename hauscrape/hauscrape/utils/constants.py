@@ -13,3 +13,13 @@ CRITERI_RICERCA_IMMOBILIARE = {
     'dataModifica'
 }
 SPIDER_NAME_IMMOBILIARE_ONSALE = 'immobiliare_onsale'
+
+# Standards
+STRING_STANDARDS = {
+    ## All lower-case
+    'CITY': r'^[a-z]+$',
+    ## All lower-case
+    'DISTRICT': r'^[a-z]+$',
+    ## (Via/Piazza/Piazzale) (Nome via/piazza/piazzale) (...) (Numero) 
+    'ADDRESS': r'^(via|piazza|piazzale)\s([a-z]+)\s([a-z]+)?\s([a-z]+)?([0-9]+)$'
+}
