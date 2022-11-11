@@ -7,6 +7,8 @@ Item Pipelines can be used for:
 
 To know more, click here (https://docs.scrapy.org/en/latest/topics/item-pipeline.html)
 
+Example of pipeline application with signals: https://github.com/dm03514/CraigslistGigs/blob/master/craigslist_gigs/pipelines.py
+
 '''
 
 import json
@@ -16,8 +18,12 @@ class HousePipeline:
     ''''''
 
     def process_item(self, item, spider):
-        ''''''
-        adapter = ItemAdapter(item)
+        '''Do Nothing'''
+        # adapter = ItemAdapter(item)
+        return item
+
+    def validate_item(self, item, spider):
+        '''Do Nothing'''
         return item
 
 

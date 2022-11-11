@@ -17,9 +17,9 @@ SPIDER_NAME_IMMOBILIARE_ONSALE = 'immobiliare_onsale'
 # Standards
 STRING_STANDARDS = {
     ## All lower-case
-    'CITY': r'^[a-z]+$',
+    'CITY': '^[a-z]+$',
     ## All lower-case
-    'DISTRICT': r'^[a-z]+$',
+    'DISTRICT': '^[a-z]+$',
     ## (Via/Piazza/Piazzale) (Nome via/piazza/piazzale) (...) (Numero) 
-    'ADDRESS': r'^(via|piazza|piazzale)\s([a-z]+)\s([a-z]+)?\s([a-z]+)?([0-9]+)$'
+    'ADDRESS': '^(via|piazza|piazzale|strada)\s([a-z]+\s){1,}\d+$'
 }

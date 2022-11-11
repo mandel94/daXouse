@@ -43,5 +43,5 @@ class Standard():
     def validate(self, value):
         ''''''
         # Return True / False if match / no match
-        return re.match(value, self._get_standard())
+        return re.search(value, self._get_standard())
 

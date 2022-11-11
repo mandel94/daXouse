@@ -2,13 +2,18 @@
 import pytest
 from utils.standards import Standard
 
-@pytest.fixture(scope='module', params=[('milano', 'city'), 
+@pytest.fixture(scope='module', params=[('city', 'milano'), 
                                         ('district', 'niguarda'),
-                                        ('address', 'Via Privata Paolo Rotta') ])
+                                        ('address', 'via privata paolo rotta 18')
+                                        ])
 
-def test_intrinsic_properties(prop: str, field: str):
+def test_intrinsic_properties(props):
+    '''Test intrinsic properties respect standards'''
+    field = props[0]
+    value = props[1]
     standard = Standard(field)
-    assert standard.validate(prop), f"{prop} does not respect standard for {field}"
+    assert standard.validate(value), f'''{value} does not respect standard 
+                                            for intrinsic property {field}'''
                                     
 
 
