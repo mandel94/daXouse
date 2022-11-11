@@ -23,8 +23,3 @@ class House:
     descrizione: Optional[str] = field(default=None)  
     exit_date: Optional[float] = field(default=None)
     
-
-@dataclass
-class HouseList:
-    timestamp: float
-    house: House

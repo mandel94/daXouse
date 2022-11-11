@@ -7,20 +7,26 @@ Item Pipelines can be used for:
 
 To know more, click here (https://docs.scrapy.org/en/latest/topics/item-pipeline.html)
 
-Example of pipeline application with signals: https://github.com/dm03514/CraigslistGigs/blob/master/craigslist_gigs/pipelines.py
+Example of pipeline application with signals 
+    --> https://github.com/dm03514/CraigslistGigs/blob/master/craigslist_gigs/pipelines.py
+
+Scrapy, Python: Multiple Item Classes in one pipeline?
+    --> https://stackoverflow.com/questions/32743469/scrapy-python-multiple-item-classes-in-one-pipeline
 
 '''
 
 import json
 from itemadapter import ItemAdapter
+from items import House
 
 class HousePipeline:
     ''''''
 
     def process_item(self, item, spider):
-        '''Do Nothing'''
+        ''''''
+        if isinstance(item, House):
+            return self.validate_item(item, spider)
         # adapter = ItemAdapter(item)
-        return item
 
     def validate_item(self, item, spider):
         '''Do Nothing'''
@@ -30,7 +36,7 @@ class HousePipeline:
 class JsonWriterPipeline:
     '''Write Items to Json file for testing purposes'''
     def open_spider(self, spider):
-        self.file = open('items.jsonl', 'w')
+        self.file = open('../out/items.jsonl', 'w')
 
     def close_spider(self, spider):
         self.file.close()

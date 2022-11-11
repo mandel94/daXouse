@@ -6,20 +6,43 @@ are defined for each field to be populated. Values returned by input processors
 are collected internally (in lists) and then passed to output processors to 
 populate the fields.
 
-Final values to be loaded into Items are obtained with the following approach:
-    1. Scrape the raw data;
-    2. Refine the raw data;
-    3. Validate the refined data;
-    4. Load validated data into Items.
-
-This file refers to point 4. 
-Once the data has been extracted (1.), refined (2.) and validated (3.) it is 
-ready to be loaded in the Item.
-
-''' 
+'''
 import hashlib
+
 from utils.customExceptions import IdDigestError
 
+
+# Input processors
+
+def to_lowercase(value):
+    '''Processor for string inputs'''
+    if isinstance(value, str):
+        return value.lower()
+    else:
+        return value
+
+def strip_ws(value):
+    '''Processor for string inputs.
+    
+    Remove leading and ending spaces.
+
+    '''
+    if isinstance(value, str):
+        return value.strip()
+    else:
+        return value
+
+
+def remove_duplicate_ws(value):
+    '''Processor for string inputs.
+
+    Remove duplicate whitespaces.
+
+    '''
+    if isinstance(value, str):
+        ' '.join(value.split())
+    else:
+        return value
 
 ## Output processors
 ### get_digest

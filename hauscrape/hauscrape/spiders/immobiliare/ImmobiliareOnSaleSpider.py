@@ -66,18 +66,6 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
                              callback=self.parse_onsale_list)
         # Check if there is a 'Next' page
 
-    
-    def parse_house_page(self, response):
-        '''Parse page of single house item'''
-        self.logging.debug("Parsing house page item")
-        HouseItemLoader = HouseLoader(item=House(), response=response)
-        for k,v in response.meta.items():
-            HouseItemLoader.add_value(k, v)
-        # Finish loading House Item
-        # HouseItemLoader.add_value('test', 'test')
-        yield HouseItemLoader.load_item()
-
-
     def parse_onsale_list(self, response):
         '''Basic callback method
         
@@ -101,16 +89,26 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             data['offered_for'] = 'for_sale'
             data['title'] = house.xpath(immobiliare_selectors.XPATH_TITLE).get()
             data['price'] = int(house.xpath(immobiliare_selectors.XPATH_PRICE).get())
-            data['n_of_rooms'] = house.xpath(immobiliare_selectors.XPATH_N_OF_ROOMS).get()
-            data['living_space'] = house.xpath(immobiliare_selectors.XPATH_LIVING_SPACE).get()
-            data['bathrooms'] = house.xpath(immobiliare_selectors.XPATH_BATHROOMS).get()
+            data['n_of_rooms'] = int(house.xpath(immobiliare_selectors.XPATH_N_OF_ROOMS).get())
+            data['living_space'] = int(house.xpath(immobiliare_selectors.XPATH_LIVING_SPACE).get())
+            data['bathrooms'] = (house.xpath(immobiliare_selectors.XPATH_BATHROOMS).get())
             data['agency'] = house.xpath(immobiliare_selectors.XPATH_AGENCY).get()
             # Get href for following request
             href = house.xpath(immobiliare_selectors.XPATH_HREF).get()
             # Request house-specific url to end values collection
             yield scrapy.Request(href, 
-                                 callback=parse_house_page, 
+                                 callback=self.parse_house_page, 
                                  meta=data)
+
+    def parse_house_page(self, response):
+        '''Parse page of single house item'''
+        self.logging.debug("Parsing house page item")
+        HouseItemLoader = HouseLoader(item=House(), response=response)
+        for k,v in response.meta.items():
+            HouseItemLoader.add_value(k, v)
+        # Finish loading House Item
+        # HouseItemLoader.add_value('test', 'test')
+        yield HouseItemLoader.load_item()
 
     
 
