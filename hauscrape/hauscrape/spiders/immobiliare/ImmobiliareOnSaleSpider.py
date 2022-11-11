@@ -3,7 +3,7 @@ from abc import ABC, abstractproperty
 import time
 
 from ...utils import constants
-from ...utils import selectors
+from ...utils.immobiliare import immobiliare_selectors 
 from ...utils.items import HouseList, House
 from ...utils.itemLoaders import HouseLoader
 from ..abstract import OnSaleSpider
@@ -35,16 +35,16 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         For example, if `criteria` is 'prezzo' and `ordine` is 'asc', the Spider
         will parse only the `top` cheapest homes.        
     """
-    name = constants.SPIDER_NAME_IMMOBILIARE_ONSALE
-    allowed_domains = constants.ALLOWED_DOMAINS_IMMOBILIARE
+    name = constants.SPIDER_NAMEONSALE
+    allowed_domains = constants.ALLOWED_DOMAINS
 
     @property
     def base_url(self):
-        return f"{constants.BASE_URL_IMMOBILIARE_ONSALE}"
+        return f"{constants.BASE_URLONSALE}"
 
     @property
     def xpath_onsale_list(self):
-        return f"{selectors.XPATH_ONSALE_LIST_IMMOBILIARE}"
+        return f"{immobiliare_selectors.XPATH_ONSALE_LIST}"
 
     def __init__(self, city: str, criterio: str, *args, **kwargs):
         super().__init__(city, criterio, *args, **kwargs)
@@ -99,14 +99,14 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             data=dict()
             data['city'] = self.city
             data['offered_for'] = 'for_sale'
-            data['title'] = house.xpath(selectors.XPATH_TITLE_IMMOBILIARE).get()
-            data['price'] = int(house.xpath(selectors.XPATH_PRICE_IMMOBILIARE).get())
-            data['n_of_rooms'] = house.xpath(selectors.XPATH_N_OF_ROOMS_IMMOBILIARE).get()
-            data['living_space'] = house.xpath(selectors.XPATH_LIVING_SPACE_IMMOBILIARE).get()
-            data['bathrooms'] = house.xpath(selectors.XPATH_BATHROOMS_IMMOBILIARE).get()
-            data['agency'] = house.xpath(selectors.XPATH_AGENCY_IMMOBILIARE).get()
+            data['title'] = house.xpath(immobiliare_selectors.XPATH_TITLE).get()
+            data['price'] = int(house.xpath(immobiliare_selectors.XPATH_PRICE).get())
+            data['n_of_rooms'] = house.xpath(immobiliare_selectors.XPATH_N_OF_ROOMS).get()
+            data['living_space'] = house.xpath(immobiliare_selectors.XPATH_LIVING_SPACE).get()
+            data['bathrooms'] = house.xpath(immobiliare_selectors.XPATH_BATHROOMS).get()
+            data['agency'] = house.xpath(immobiliare_selectors.XPATH_AGENCY).get()
             # Get href for following request
-            href = house.xpath(selectors.XPATH_HREF_IMMOBILIARE).get()
+            href = house.xpath(immobiliare_selectors.XPATH_HREF).get()
             # Request house-specific url to end values collection
             yield scrapy.Request(href, 
                                  callback=parse_house_page, 
