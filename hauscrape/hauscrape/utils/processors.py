@@ -9,7 +9,7 @@ populate the fields.
 '''
 import hashlib
 
-from utils.customExceptions import IdDigestError
+from ..utils.customExceptions import IdDigestError
 
 
 # Input processors

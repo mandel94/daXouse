@@ -1,10 +1,11 @@
-from dataclasses import dataclass, field
 from typing import Optional, Literal
-from itemloaders.processors import MapCompose
-from utils.processors import filter_intrinsic_prop
+
+from scrapy.item import Item, Field
+from dataclasses import dataclass, field
 
 @dataclass  
 class House:
+    ''''''
     offered_for: Literal['for_sale', 'for_rent']
     id: Optional[float] = field(default=None)
     title: Optional[str] = field(default=None)
@@ -22,4 +23,9 @@ class House:
     agency: Optional[str] = field(default=None)
     descrizione: Optional[str] = field(default=None)  
     exit_date: Optional[float] = field(default=None)
+
+class HouseListing(Item):
+    ''''''
+    timestamp = Field(default=None)
+    listing = Field(default=[])
     

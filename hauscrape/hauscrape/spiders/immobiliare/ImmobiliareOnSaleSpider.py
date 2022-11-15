@@ -3,12 +3,15 @@ from abc import ABC, abstractproperty
 import time
 
 from ...utils import constants
-from ...utils.immobiliare import immobiliare_selectors 
-from ...utils.items import HouseList, House
+from ...utils.selectors import IMMOBILIARE_SELECTORS
+from ...utils.items import HouseListing, House
 from ...utils.itemLoaders import HouseLoader
 from ..abstract import OnSaleSpider
 
 import scrapy
+from scrapy import Selector
+from scrapy.utils.response import open_in_browser
+import logging
 import pandas as pd
      
 
@@ -35,18 +38,19 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         For example, if `criteria` is 'prezzo' and `ordine` is 'asc', the Spider
         will parse only the `top` cheapest homes.        
     """
-    name = constants.SPIDER_NAMEONSALE
-    allowed_domains = constants.ALLOWED_DOMAINS
+    name = constants.SPIDER_NAME_IMMOBILIARE_ONSALE
+    allowed_domains = constants.ALLOWED_DOMAINS_IMMOBILIARE
 
     @property
     def base_url(self):
-        return f"{constants.BASE_URLONSALE}"
+        return f"{constants.BASE_URL_IMMOBILIARE_ONSALE}"
 
     @property
     def xpath_onsale_list(self):
-        return f"{immobiliare_selectors.XPATH_ONSALE_LIST}"
+        '''Get selector for immobiliare house listing'''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_ONSALE_LIST']}"
 
-    def __init__(self, city: str, criterio: str, *args, **kwargs):
+    def __init__(self, city: str='milano', criterio: str='rilevanza', *args, **kwargs):
         super().__init__(city, criterio, *args, **kwargs)
         print(f"Initialize OnSaleSpider w/ params [city={self.city}, "
               f"criterio={self.criterio}]")
@@ -74,8 +78,7 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         list(str)
             List of URLs of onsale apartment 
         '''
-    
-        houseListItem = HouseList()
+        houseListItem = HouseListing()
         # Last update timestamp
         houseListItem['timestamp'] = time.time()
         # Use path expressions to get list of houses.
@@ -84,17 +87,19 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         # For each house Selector
         for house in house_list:
             # Start collecting values to load on Item
+            # self.logger.error("CUSTOM ERROR: %s", house.xpath("/li"))
+            house_selector = Selector(text=house.get())
             data=dict()
             data['city'] = self.city
             data['offered_for'] = 'for_sale'
-            data['title'] = house.xpath(immobiliare_selectors.XPATH_TITLE).get()
-            data['price'] = int(house.xpath(immobiliare_selectors.XPATH_PRICE).get())
-            data['n_of_rooms'] = int(house.xpath(immobiliare_selectors.XPATH_N_OF_ROOMS).get())
-            data['living_space'] = int(house.xpath(immobiliare_selectors.XPATH_LIVING_SPACE).get())
-            data['bathrooms'] = (house.xpath(immobiliare_selectors.XPATH_BATHROOMS).get())
-            data['agency'] = house.xpath(immobiliare_selectors.XPATH_AGENCY).get()
+            data['title'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_TITLE']).get()
+            data['price'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_PRICE']).get())
+            data['n_of_rooms'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_N_OF_ROOMS']).get())
+            data['living_space'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_LIVING_SPACE']).get())
+            data['bathrooms'] = (house.xpath(IMMOBILIARE_SELECTORS['XPATH_BATHROOMS']).get())
+            data['agency'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_AGENCY']).get()
             # Get href for following request
-            href = house.xpath(immobiliare_selectors.XPATH_HREF).get()
+            href = house.xpath(IMMOBILIARE_SELECTORS['XPATH_HREF']).get()
             # Request house-specific url to end values collection
             yield scrapy.Request(href, 
                                  callback=self.parse_house_page, 
@@ -102,7 +107,7 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
 
     def parse_house_page(self, response):
         '''Parse page of single house item'''
-        self.logging.debug("Parsing house page item")
+        logging.debug("Parsing house page item")
         HouseItemLoader = HouseLoader(item=House(), response=response)
         for k,v in response.meta.items():
             HouseItemLoader.add_value(k, v)

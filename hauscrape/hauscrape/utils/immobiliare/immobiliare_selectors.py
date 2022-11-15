@@ -1,5 +1,5 @@
 '''String selectors for scraping immobiliare website'''
-import utils.selectors as selectors
+from ...utils.selectors import XPATH_ONSALE_LIST_IMMOBILIARE
 
 XPATH_ONSALE_LIST = selectors.XPATH_ONSALE_LIST_IMMOBILIARE 
 XPATH_PRICE = selectors.XPATH_PRICE_IMMOBILIARE 

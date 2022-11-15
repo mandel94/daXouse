@@ -17,7 +17,7 @@ Scrapy, Python: Multiple Item Classes in one pipeline?
 
 import json
 from itemadapter import ItemAdapter
-from items import House
+from .items import House
 
 class HousePipeline:
     ''''''
@@ -36,7 +36,7 @@ class HousePipeline:
 class JsonWriterPipeline:
     '''Write Items to Json file for testing purposes'''
     def open_spider(self, spider):
-        self.file = open('../out/items.jsonl', 'w')
+        self.file = open('items.jsonl', 'w')
 
     def close_spider(self, spider):
         self.file.close()
