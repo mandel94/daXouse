@@ -1,19 +1,21 @@
+import json
+import logging
 import os
-from abc import ABC, abstractproperty
 import time
+from abc import ABC, abstractproperty
 
-from ...utils import constants
-from ...utils.selectors import IMMOBILIARE_SELECTORS
-from ...utils.items import HouseListing, House
-from ...utils.itemLoaders import HouseLoader
-from ..abstract import OnSaleSpider
-
+import pandas as pd
 import scrapy
 from scrapy import Selector
 from scrapy.utils.response import open_in_browser
-import logging
-import pandas as pd
-     
+
+from ...utils import constants
+from ...utils.itemLoaders import HouseLoader
+from ...utils.items import House, HouseListing
+from ...utils.selectors import IMMOBILIARE_SELECTORS
+from ...utils.tooklit import is_group
+from ..abstract import OnSaleSpider
+
 
 class ImmobiliareOnSaleSpider(OnSaleSpider):
     """Spider for immobiliare.com on-sale page.
@@ -50,6 +52,16 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         '''Get selector for immobiliare house listing'''
         return f"{IMMOBILIARE_SELECTORS['XPATH_ONSALE_LIST']}"
 
+    @property
+    def xpath_title(self):
+        '''Get selector for immobiliare house listing'''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_TITLE']}"
+
+    @property
+    def xpath_price(self):
+        '''Get selector for immobiliare house price'''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_PRICE']}"
+
     def __init__(self, city: str='milano', criterio: str='rilevanza', *args, **kwargs):
         super().__init__(city, criterio, *args, **kwargs)
         print(f"Initialize OnSaleSpider w/ params [city={self.city}, "
@@ -84,26 +96,35 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         # Use path expressions to get list of houses.
         # Result will be a list of Selectors
         house_list = response.xpath(self.xpath_onsale_list)
-        # For each house Selector
         for house in house_list:
-            # Start collecting values to load on Item
-            # self.logger.error("CUSTOM ERROR: %s", house.xpath("/li"))
-            house_selector = Selector(text=house.get())
-            data=dict()
-            data['city'] = self.city
-            data['offered_for'] = 'for_sale'
-            data['title'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_TITLE']).get()
-            data['price'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_PRICE']).get())
-            data['n_of_rooms'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_N_OF_ROOMS']).get())
-            data['living_space'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_LIVING_SPACE']).get())
-            data['bathrooms'] = (house.xpath(IMMOBILIARE_SELECTORS['XPATH_BATHROOMS']).get())
-            data['agency'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_AGENCY']).get()
-            # Get href for following request
-            href = house.xpath(IMMOBILIARE_SELECTORS['XPATH_HREF']).get()
-            # Request house-specific url to end values collection
-            yield scrapy.Request(href, 
-                                 callback=self.parse_house_page, 
-                                 meta=data)
+            # Create house selector from house text
+            house = Selector(text=house.get())
+            # Check if house item is actually a group of houses.
+            # if is_group(house):
+            #     continue
+            price = house.xpath(self.xpath_price).get()
+            self.logger.debug(f'{price}')
+            # Get items
+        # For each house Selector
+        # for house in house_list:
+        #     # Start collecting values to load on Item
+        #     # self.logger.error("CUSTOM ERROR: %s", house.xpath("/li"))
+        #     house_selector = Selector(text=house.get())
+        #     data=dict()
+        #     data['city'] = self.city
+        #     data['offered_for'] = 'for_sale'
+        #     data['title'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_TITLE']).get()
+        #     data['price'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_PRICE']).get())
+        #     data['n_of_rooms'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_N_OF_ROOMS']).get())
+        #     data['living_space'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_LIVING_SPACE']).get())
+        #     data['bathrooms'] = (house.xpath(IMMOBILIARE_SELECTORS['XPATH_BATHROOMS']).get())
+        #     data['agency'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_AGENCY']).get()
+        #     # Get href for following request
+        #     href = house.xpath(IMMOBILIARE_SELECTORS['XPATH_HREF']).get()
+        #     # Request house-specific url to end values collection
+        #     yield scrapy.Request(href, 
+        #                          callback=self.parse_house_page, 
+        #                          meta=data)
 
     def parse_house_page(self, response):
         '''Parse page of single house item'''

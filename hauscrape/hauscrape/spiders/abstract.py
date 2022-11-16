@@ -24,3 +24,13 @@ class OnSaleSpider(scrapy.Spider, ABC):
     def xpath_onsale_list(self):
         '''Xpath selector of the house listing'''
         pass
+
+    @abstractproperty
+    def xpath_title(self):
+        '''Xpath selector of the house title'''
+        pass
+
+    @abstractproperty
+    def xpath_price(self):
+        '''Xpath selector of the house price'''
+        pass

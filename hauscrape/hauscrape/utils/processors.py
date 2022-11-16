@@ -7,42 +7,55 @@ are collected internally (in lists) and then passed to output processors to
 populate the fields.
 
 '''
+
+import re
 import hashlib
 
-from ..utils.customExceptions import IdDigestError
+from utils.customExceptions import IdDigestError
 
 
-# Input processors
-
-def to_lowercase(value):
-    '''Processor for string inputs'''
-    if isinstance(value, str):
-        return value.lower()
-    else:
-        return value
-
-def strip_ws(value):
+def strip_ws(value: str) -> str:
     '''Processor for string inputs.
     
     Remove leading and ending spaces.
 
     '''
-    if isinstance(value, str):
+    try:
         return value.strip()
-    else:
-        return value
+    except:
+        return None
 
-
-def remove_duplicate_ws(value):
+def remove_duplicate_ws(value: str) -> str:
     '''Processor for string inputs.
 
     Remove duplicate whitespaces.
 
     '''
-    if isinstance(value, str):
-        ' '.join(value.split())
-    else:
-        return value
+    try:
+        return ' '.join(value.split())
+    except:
+        return None
+
+def remove_currency_symbols(price: str) -> str:
+    '''Remove currency symbols from price'''
+    try:
+        special_symbols_pattern = r"[€$£]"
+        return re.sub(special_symbols_pattern, '', price)
+    except: 
+        return None
+
+def convert_price_to_int(price: str) -> int:
+    '''Convert price to integer'''
+    try:
+        # Remove thousand and decimal separators
+        price = price.replace('.', '')\
+                     .replace(',', '')\
+                     .replace('_', '')
+        return int(price)
+    except:
+        return None
+
+
 
 ## Output processors
 ### get_digest
