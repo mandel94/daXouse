@@ -11,9 +11,19 @@ populate the fields.
 import re
 import hashlib
 
-from utils.customExceptions import IdDigestError
+from ..utils.customExceptions import IdDigestError
 
+def to_lowercase(value: str) -> str:
+    '''Processor for string inputs. 
+    
+    Convert string to lowercase, plus manage missing values
 
+    '''
+    try:
+        return value.lower()
+    except:
+        return None
+    
 def strip_ws(value: str) -> str:
     '''Processor for string inputs.
     
@@ -54,6 +64,8 @@ def convert_price_to_int(price: str) -> int:
         return int(price)
     except:
         return None
+
+
 
 
 

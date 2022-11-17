@@ -13,7 +13,6 @@ from ...utils import constants
 from ...utils.itemLoaders import HouseLoader
 from ...utils.items import House, HouseListing
 from ...utils.selectors import IMMOBILIARE_SELECTORS
-from ...utils.tooklit import is_group
 from ..abstract import OnSaleSpider
 
 

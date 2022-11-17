@@ -33,7 +33,6 @@ class TestStringProcessors:
         no_currency_found=True
         for c in currencies:
             if re.search(c, out):
-                '''Search for `c` in `out`'''
                 no_currency_found = False
                 break
         assert no_currency_found, f'Special symbols found in price: {price}'
@@ -45,7 +44,7 @@ class TestStringProcessors:
         except Exception as exc:
             assert False, f'`convert_price_to_int` raised an exection: {exc}' 
         
-        
+    
 
     
 
