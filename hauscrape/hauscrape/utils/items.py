@@ -6,8 +6,9 @@ from dataclasses import dataclass, field
 @dataclass  
 class House:
     ''''''
-    offered_for: Literal['for_sale', 'for_rent']
     id: Optional[float] = field(default=None)
+    last_updated: Optional[float] = field(default=None)
+    offered_for: Optional[Literal['for_sale', 'for_rent']] = field(default=None)
     title: Optional[str] = field(default=None)
     city: Optional[str] = field(default=None)
     price: Optional[int] = field(default=None)
@@ -22,7 +23,6 @@ class House:
     enter_date: Optional[float] = field(default=None)
     agency: Optional[str] = field(default=None)
     descrizione: Optional[str] = field(default=None)  
-    exit_date: Optional[float] = field(default=None)
 
 class HouseListing(Item):
     ''''''

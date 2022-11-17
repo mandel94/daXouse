@@ -98,32 +98,11 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         for house in house_list:
             # Create house selector from house text
             house = Selector(text=house.get())
-            # Check if house item is actually a group of houses.
-            # if is_group(house):
-            #     continue
-            price = house.xpath(self.xpath_price).get()
-            self.logger.debug(f'{price}')
-            # Get items
-        # For each house Selector
-        # for house in house_list:
-        #     # Start collecting values to load on Item
-        #     # self.logger.error("CUSTOM ERROR: %s", house.xpath("/li"))
-        #     house_selector = Selector(text=house.get())
-        #     data=dict()
-        #     data['city'] = self.city
-        #     data['offered_for'] = 'for_sale'
-        #     data['title'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_TITLE']).get()
-        #     data['price'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_PRICE']).get())
-        #     data['n_of_rooms'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_N_OF_ROOMS']).get())
-        #     data['living_space'] = int(house.xpath(IMMOBILIARE_SELECTORS['XPATH_LIVING_SPACE']).get())
-        #     data['bathrooms'] = (house.xpath(IMMOBILIARE_SELECTORS['XPATH_BATHROOMS']).get())
-        #     data['agency'] = house.xpath(IMMOBILIARE_SELECTORS['XPATH_AGENCY']).get()
-        #     # Get href for following request
-        #     href = house.xpath(IMMOBILIARE_SELECTORS['XPATH_HREF']).get()
-        #     # Request house-specific url to end values collection
-        #     yield scrapy.Request(href, 
-        #                          callback=self.parse_house_page, 
-        #                          meta=data)
+            # Create Item Loader
+            house_loader = HouseLoader(House(), selector=house) 
+            house_loader.add_xpath('price', self.xpath_price)
+            yield house_loader.load_item()
+
 
     def parse_house_page(self, response):
         '''Parse page of single house item'''

@@ -1,2 +1,2 @@
-from scrapy import Selector
+'''Utility functions'''
 
