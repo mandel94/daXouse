@@ -36,6 +36,7 @@ class HousePipeline:
         return item
 
 
+
 class JsonLinesExportPipeline:
     '''Write Items to Json file'''
 

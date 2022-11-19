@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 import time
 from abc import ABC, abstractproperty
 
@@ -10,8 +9,8 @@ from scrapy import Selector
 from scrapy.utils.response import open_in_browser
 
 from ...utils import constants
-from ...utils.itemLoaders import HouseLoader
-from ...utils.items import House, HouseListing
+from ...utils.itemLoaders import HouseLoader, HouseCollectionLoader
+from ...utils.items import House, HouseCollection
 from ...utils.selectors import IMMOBILIARE_SELECTORS
 from ..abstract import OnSaleSpider
 
@@ -89,11 +88,10 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         list(str)
             List of URLs of onsale apartment 
         '''
-        houseListItem = HouseListing()
+        list_loader = HouseCollectionLoader(HouseCollection())
         # Last update timestamp
-        houseListItem['timestamp'] = time.time()
-        # Use path expressions to get list of houses.
-        # Result will be a list of Selectors
+        ## Use path expressions to get list of houses.
+        ## Result will be a list of Selectors
         house_list = response.xpath(self.xpath_onsale_list)
         for house in house_list:
             # Create house selector from house text
