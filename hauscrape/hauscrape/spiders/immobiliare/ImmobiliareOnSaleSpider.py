@@ -88,7 +88,6 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         list(str)
             List of URLs of onsale apartment 
         '''
-        list_loader = HouseCollectionLoader(HouseCollection())
         # Last update timestamp
         ## Use path expressions to get list of houses.
         ## Result will be a list of Selectors
