@@ -10,8 +10,10 @@ populate the fields.
 
 import re
 import hashlib
+from typing import List, Union
 
-from ..utils.customExceptions import IdDigestError
+from .customExceptions import IdDigestError
+from .custom_types import T
 
 def to_lowercase(value: str) -> str:
     '''Processor for string inputs. 
@@ -65,12 +67,31 @@ def convert_price_to_int(price: str) -> int:
     except:
         return None
 
+def convert_to_int(x: List[str]) -> int:
+    ''''''
+    try:
+        return int(x.pop())
+    except:
+        return None
 
-
+def convert_to_bool(x: Union[List[str], None]) -> bool:
+    ''''''
+    try:
+        return bool(x)
+    except:
+        return False
 
 
 ## Output processors
-### get_digest
+
+def unlist_value(x: list[T]) -> T:
+    ''''''
+    try:
+        return x.pop()
+    except:
+        return None
+
+
 def get_digest(*intrinsic_props):
     '''Get house id from hashing a number of its intrinsic properties.
 

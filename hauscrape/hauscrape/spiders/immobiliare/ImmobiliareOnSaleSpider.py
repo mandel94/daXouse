@@ -1,7 +1,7 @@
 import json
 import logging
 import time
-from abc import ABC, abstractproperty
+from abc import ABC
 
 import pandas as pd
 import scrapy
@@ -47,18 +47,43 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
 
     @property
     def xpath_onsale_list(self):
-        '''Get selector for immobiliare house listing'''
+        ''''''
         return f"{IMMOBILIARE_SELECTORS['XPATH_ONSALE_LIST']}"
 
     @property
     def xpath_title(self):
-        '''Get selector for immobiliare house listing'''
+        ''''''
         return f"{IMMOBILIARE_SELECTORS['XPATH_TITLE']}"
 
     @property
     def xpath_price(self):
-        '''Get selector for immobiliare house price'''
+        ''''''
         return f"{IMMOBILIARE_SELECTORS['XPATH_PRICE']}"
+
+    @property
+    def xpath_rooms(self):
+        ''''''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_ROOMS']}"
+
+    @property
+    def xpath_living_space(self):
+        ''''''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_LIVING_SPACE']}"
+
+    @property
+    def xpath_bathrooms(self):
+        ''''''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_BATHROOMS']}"
+
+    @property
+    def xpath_floor(self):
+        ''''''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_FLOOR']}"
+
+    @property
+    def xpath_is_luxury(self):
+        ''''''
+        return f"{IMMOBILIARE_SELECTORS['XPATH_IS_LUXURY']}"
 
     def __init__(self, city: str='milano', criterio: str='rilevanza', *args, **kwargs):
         super().__init__(city, criterio, *args, **kwargs)
@@ -97,7 +122,15 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             house = Selector(text=house.get())
             # Create Item Loader
             house_loader = HouseLoader(House(), selector=house) 
+            house_loader.add_value('city', self.city)
             house_loader.add_xpath('price', self.xpath_price)
+            house_loader.add_xpath('title', self.xpath_title)
+            # house_loader.add_xpath('rooms', self.xpath_rooms)
+            house_loader.add_xpath('rooms', self.xpath_rooms)
+            house_loader.add_xpath('living_space', self.xpath_living_space)
+            house_loader.add_xpath('bathrooms', self.xpath_bathrooms)
+            house_loader.add_xpath('floor', self.xpath_floor)
+            house_loader.add_xpath('is_luxury', self.xpath_is_luxury)
             yield house_loader.load_item()
 
 

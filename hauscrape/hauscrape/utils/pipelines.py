@@ -17,7 +17,9 @@ Scrapy, Python: Multiple Item Classes in one pipeline?
 
 import uuid
 from itemadapter import ItemAdapter
-from scrapy.exporters import JsonLinesItemExporter
+from scrapy.exporters import JsonItemExporter
+from scrapy.exceptions import DropItem
+
 from .items import House
 
 
@@ -28,10 +30,15 @@ class HousePipeline:
         ''''''
         if isinstance(item, House):
             return self.validate_item(item, spider)
+             
         
 
     def validate_item(self, item, spider):
-        '''Do Nothing'''
+        ''''''
+        adapter = ItemAdapter(item)
+        if not adapter['price']:
+            raise DropItem(f"Item={item} is a group of houses/apartments.\
+                             It has been dropped.")
         return item
 
 
@@ -39,31 +46,25 @@ class HousePipeline:
 class JsonLinesExportPipeline:
     '''Write Items to Json file'''
 
+    def __init__(self):
+        ''''''
+        self.files = {}
+
     def open_spider(self, spider):
         ''''''
-        self.exporters = {}
-        self.jsonl_file = open(f'items.jsonl', 'wb')
+        self.file = open(f'items.json', 'wb')
+        self.files[spider] = self.file
+        self.exporter = JsonItemExporter(self.file)
+        self.exporter.start_exporting()
 
     def close_spider(self, spider):
         ''''''
-        for exporter in self.exporters.values():
-            exporter.finish_exporting()
-        self.jsonl_file.close()
-
-    def _exporter_for_item(self, item):
-        ''''''
-        # This randomly generated id is only for testing purposes, and should
-        # be removed and substituted by the real item id
-        item_id = uuid.uuid4()
-        exporter = JsonLinesItemExporter(self.jsonl_file)
-        exporter.start_exporting()
-        self.exporters[item_id] = exporter
-        return exporter
+        self.exporter.finish_exporting()
+        self.file.close()
 
     def process_item(self, item, spider):
         ''''''
-        exporter = self._exporter_for_item(item)
-        exporter.export_item(item)
+        self.exporter.export_item(item)
         return item
 
 
