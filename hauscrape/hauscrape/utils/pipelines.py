@@ -16,7 +16,6 @@ Scrapy, Python: Multiple Item Classes in one pipeline?
 '''
 
 import uuid
-import json
 from itemadapter import ItemAdapter
 from scrapy.exporters import JsonLinesItemExporter
 from .items import House

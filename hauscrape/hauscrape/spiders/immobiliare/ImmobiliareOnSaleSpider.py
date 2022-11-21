@@ -9,8 +9,8 @@ from scrapy import Selector
 from scrapy.utils.response import open_in_browser
 
 from ...utils import constants
-from ...utils.itemLoaders import HouseLoader, HouseCollectionLoader
-from ...utils.items import House, HouseCollection
+from ...utils.itemLoaders import HouseLoader
+from ...utils.items import House
 from ...utils.selectors import IMMOBILIARE_SELECTORS
 from ..abstract import OnSaleSpider
 

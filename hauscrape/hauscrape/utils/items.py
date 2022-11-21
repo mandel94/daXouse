@@ -7,8 +7,6 @@ from dataclasses import dataclass, field
 class House:
     '''Individual House''' 
     id: Optional[float] = field(default=None)
-    last_updated: Optional[float] = field(default=None)
-    features: Optional[dict] = field(default = {})
     title: Optional[str] = field(default=None)
     city: Optional[str] = field(default=None)   
     price: Optional[int] = field(default=None)
@@ -25,18 +23,3 @@ class House:
     agency: Optional[str] = field(default=None)
     descrizione: Optional[str] = field(default=None) 
 
-# class HouseCollection(Item):
-#     '''Listing of Houses. 
-    
-#     Fields:
-#         - timestamp
-#             Timestamp of the listing
-#         - listing_type
-#             Are listed houses for-sale or for-rent?
-#         - listing
-#             The list of houses
-
-#     '''
-#     timestamp = field(default=None)
-#     listing_type: Optional[Literal['for_sale', 'for_rent']] = field(default=None)
-#     listing: list = field(default=[])

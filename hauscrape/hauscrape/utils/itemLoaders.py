@@ -19,9 +19,7 @@ class HouseLoader(ItemLoader):
                           strip_ws,
                           convert_price_to_int)
 
-# class HouseCollectionLoader(ItemLoader):
-#     ''''''
-#     default_input_processor = Identity()
+
 
 
                                          

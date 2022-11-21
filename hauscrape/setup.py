@@ -9,3 +9,4 @@ setup(name='Hauscrape',
       packages=['hauscrape'],
       license='MIT'
 )
+
