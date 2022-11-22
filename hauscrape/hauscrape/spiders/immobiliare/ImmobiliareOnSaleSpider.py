@@ -117,6 +117,8 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
     async def parse_sub_page(self, href):
         '''Parse the web page of a specific house to get additional data to
            be loaded in the final item.
+
+           Returns the html text of the house page.
         '''
         async with aiohttp.ClientSession() as session:
             async with session.get(href) as sub_response:
@@ -165,11 +167,13 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             house_loader.add_xpath('floor', self.xpath_floor)
             house_loader.add_xpath('is_luxury', self.xpath_is_luxury)
 
-            # Get href for nested Request
+            # We need aditional data to populate the house item that we cannot
+            # find in the listings page.
+            # To do that we make an async request to the specific house page to 
+            # get the data object with all the additional information we need.
             house_href = house.xpath(self.xpath_href).get()
             additional_data_text = asyncio.run(self.parse_sub_page(house_href))
             additional_data_object = self.get_additional_data_object(Selector(text=additional_data_text))
-            logging.debug(f"ADDITIONAL DATA OBJECT = {additional_data_object['listing']}")
             # Collect rest of information from nested Request
             break
             
