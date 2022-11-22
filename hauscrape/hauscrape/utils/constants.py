@@ -23,3 +23,5 @@ STRING_STANDARDS = {
     ## (Via/Piazza/Piazzale) (Nome via/piazza/piazzale) (...) (Numero) 
     'ADDRESS': r'^(via|piazza|piazzale|strada)\s([a-z]+\s){1,}\d+$'
 }
+
+GROUND_FLOOR_VALUE = 'ground floor'

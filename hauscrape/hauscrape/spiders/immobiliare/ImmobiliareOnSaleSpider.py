@@ -125,12 +125,12 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             house_loader.add_value('city', self.city)
             house_loader.add_xpath('price', self.xpath_price)
             house_loader.add_xpath('title', self.xpath_title)
-            # house_loader.add_xpath('rooms', self.xpath_rooms)
             house_loader.add_xpath('rooms', self.xpath_rooms)
             house_loader.add_xpath('living_space', self.xpath_living_space)
             house_loader.add_xpath('bathrooms', self.xpath_bathrooms)
             house_loader.add_xpath('floor', self.xpath_floor)
             house_loader.add_xpath('is_luxury', self.xpath_is_luxury)
+            # house_loader.add_xpath
             yield house_loader.load_item()
 
 

@@ -11,3 +11,5 @@ IMMOBILIARE_SELECTORS = {'XPATH_ONSALE_LIST' : '//ul[@data-cy="result-list"]/li[
                          'XPATH_HREF' : '//div[@class="in-realEstateListCard__content"]/a/@href',
                          'XPATH_FLOOR': '//li[@aria-label="piano"]/div/text()',
                          'XPATH_IS_LUXURY': '//li[@aria-label="lusso"]'}
+
+

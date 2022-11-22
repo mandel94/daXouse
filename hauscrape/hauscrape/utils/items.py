@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+from typing import Optional, Literal, Union
 
 from scrapy.item import Item
 from dataclasses import dataclass, field
@@ -13,7 +13,7 @@ class House:
     rooms: Optional[int] = field(default=None)
     living_space: Optional[int] = field(default=None)
     bathrooms: Optional[int] = field(default=None)
-    floor: Optional[int] = field(default=None)
+    floor: Optional[str] = field(default=None)
     hasLift: Optional[bool] = field(default=None)
     has_balcony: Optional[bool] = field(default=None)
     has_terrace: Optional[bool] = field(default=None)

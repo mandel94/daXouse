@@ -11,9 +11,11 @@ populate the fields.
 import re
 import hashlib
 from typing import List, Union
+import logging
 
 from .customExceptions import IdDigestError
 from .custom_types import T
+from .constants import GROUND_FLOOR_VALUE
 
 def to_lowercase(value: str) -> str:
     '''Processor for string inputs. 
@@ -70,7 +72,7 @@ def convert_price_to_int(price: str) -> int:
 def convert_to_int(x: List[str]) -> int:
     ''''''
     try:
-        return int(x.pop())
+        return int(unlist_value(x))
     except:
         return None
 
@@ -81,13 +83,31 @@ def convert_to_bool(x: Union[List[str], None]) -> bool:
     except:
         return False
 
+def process_floor(floor: Union[List[str], None]) -> Union[int, None]:
+    '''Handle value assignment to floor.'''
+    if floor:
+        try:
+            intermediate_floor = int(floor[0]) # to trigger exception
+            return str(intermediate_floor)
+        except:
+            return handle_floor(floor[0])
+    else:
+        return None
+
+def handle_floor(what_floor: str) -> str:
+    ''''''
+    if what_floor == 'T': # ground floor
+        return GROUND_FLOOR_VALUE
+    
+ 
+
 
 ## Output processors
 
-def unlist_value(x: list[T]) -> T:
+def unlist_value(x: list[T]) -> Union[T, None]:
     ''''''
     try:
-        return x.pop()
+        return x[0]
     except:
         return None
 
