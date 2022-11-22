@@ -34,3 +34,32 @@ class OnSaleSpider(scrapy.Spider, ABC):
     def xpath_price(self):
         '''Xpath selector of the house price'''
         pass
+
+    @abstractproperty
+    def xpath_rooms(self):
+        '''Xpath selector for the number of rooms'''
+        pass
+
+
+    @abstractproperty
+    def xpath_living_space(self):
+        '''Xpath selector of the house living space'''
+        pass
+
+
+    @abstractproperty
+    def xpath_bathrooms(self):
+        '''Xpath selector of the number of bathrooms'''
+        pass
+
+
+    @abstractproperty
+    def xpath_floor(self):
+        '''Xpath selector of the house floor'''
+        pass
+
+
+    @abstractproperty
+    def xpath_is_luxury(self):
+        '''Xpath for checking if it is a luxury house'''
+        pass

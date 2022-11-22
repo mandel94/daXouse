@@ -120,6 +120,7 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         for house in house_list:
             # Create house selector from house text
             house = Selector(text=house.get())
+
             # Create Item Loader
             house_loader = HouseLoader(House(), selector=house) 
             house_loader.add_value('city', self.city)
@@ -130,6 +131,10 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             house_loader.add_xpath('bathrooms', self.xpath_bathrooms)
             house_loader.add_xpath('floor', self.xpath_floor)
             house_loader.add_xpath('is_luxury', self.xpath_is_luxury)
+
+            # Get href for nested Request
+            house_href = house.xpath()
+            
             # house_loader.add_xpath
             yield house_loader.load_item()
 
