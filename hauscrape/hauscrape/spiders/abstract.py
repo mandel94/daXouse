@@ -1,6 +1,6 @@
 '''Abstract classes are defined here'''
 
-from abc import ABC, abstractproperty
+from abc import ABC, abstractproperty, abstractmethod
 import scrapy
 
 class OnSaleSpider(scrapy.Spider, ABC):
@@ -16,50 +16,68 @@ class OnSaleSpider(scrapy.Spider, ABC):
         self.criterio = criterio
 
     @abstractproperty
-    def base_url(self):
+    def base_url(self) -> str:
         '''Base URL of the website to scrape'''
         pass
 
     @abstractproperty
-    def xpath_onsale_list(self):
+    def xpath_onsale_list(self) -> str:
         '''Xpath selector of the house listing'''
         pass
 
     @abstractproperty
-    def xpath_title(self):
+    def xpath_title(self) -> str:
         '''Xpath selector of the house title'''
         pass
 
     @abstractproperty
-    def xpath_price(self):
+    def xpath_price(self) -> str:
         '''Xpath selector of the house price'''
         pass
 
     @abstractproperty
-    def xpath_rooms(self):
+    def xpath_rooms(self) -> str:
         '''Xpath selector for the number of rooms'''
         pass
 
 
     @abstractproperty
-    def xpath_living_space(self):
+    def xpath_living_space(self) -> str:
         '''Xpath selector of the house living space'''
         pass
 
 
     @abstractproperty
-    def xpath_bathrooms(self):
+    def xpath_bathrooms(self) -> str:
         '''Xpath selector of the number of bathrooms'''
         pass
 
 
     @abstractproperty
-    def xpath_floor(self):
+    def xpath_floor(self) -> str:
         '''Xpath selector of the house floor'''
+        pass
+
+    @abstractproperty
+    def xpath_href(self) -> str:
+        '''Xpath selector for house hfref'''
         pass
 
 
     @abstractproperty
-    def xpath_is_luxury(self):
+    def xpath_is_luxury(self) -> str:
         '''Xpath for checking if it is a luxury house'''
+        pass
+
+    
+    @abstractproperty
+    def xpath_additional_data_object(self) -> str:
+        '''Xpath for selecting information about an house from 
+           its specific page.
+        '''
+        pass
+    
+    @abstractmethod
+    def get_additional_data_object(self, selector) -> dict:
+        '''Get dictionary with additional data from individual house pages.'''
         pass

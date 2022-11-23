@@ -14,7 +14,7 @@ class House:
     living_space: Optional[int] = field(default=None)
     bathrooms: Optional[int] = field(default=None)
     floor: Optional[str] = field(default=None)
-    hasLift: Optional[bool] = field(default=None)
+    hasLift: Optional[bool] = field(default=False)
     has_balcony: Optional[bool] = field(default=None)
     has_terrace: Optional[bool] = field(default=None)
     is_luxury: Optional[bool] = field(default=False) 

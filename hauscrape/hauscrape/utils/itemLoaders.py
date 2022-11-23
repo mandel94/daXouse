@@ -5,7 +5,7 @@ from itemloaders.processors import MapCompose, Identity, Compose
 from ..utils.processors import to_lowercase, strip_ws, remove_duplicate_ws,\
                                remove_currency_symbols, convert_price_to_int,\
                                unlist_value, convert_to_int, convert_to_bool,\
-                               process_floor
+                               process_floor, process_district
 
 
 class HouseLoader(ItemLoader):
@@ -26,6 +26,7 @@ class HouseLoader(ItemLoader):
     bathrooms_in = convert_to_int
     floor_in = process_floor
     is_luxury_in = convert_to_bool
+    district_in = process_district
 
     default_output_processor = unlist_value
 

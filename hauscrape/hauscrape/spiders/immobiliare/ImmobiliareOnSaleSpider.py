@@ -1,12 +1,13 @@
-import json
 import logging
-import time
 from abc import ABC
+import asyncio
+import json
 
 import pandas as pd
 import scrapy
-from scrapy import Selector
+from scrapy import Selector, Request
 from scrapy.utils.response import open_in_browser
+import aiohttp 
 
 from ...utils import constants
 from ...utils.itemLoaders import HouseLoader
@@ -85,6 +86,14 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         ''''''
         return f"{IMMOBILIARE_SELECTORS['XPATH_IS_LUXURY']}"
 
+    @property
+    def xpath_href(self):
+        return f"{IMMOBILIARE_SELECTORS['XPATH_HREF']}"
+
+    @property 
+    def xpath_additional_data_object(self):
+        return f"{IMMOBILIARE_SELECTORS['XPATH_ADDITIONAL_DATA_OBJECT']}"
+
     def __init__(self, city: str='milano', criterio: str='rilevanza', *args, **kwargs):
         super().__init__(city, criterio, *args, **kwargs)
         print(f"Initialize OnSaleSpider w/ params [city={self.city}, "
@@ -105,7 +114,31 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
                              callback=self.parse_onsale_list)
         # Check if there is a 'Next' page
 
-    def parse_onsale_list(self, response):
+    async def parse_sub_page(self, href):
+        '''Parse the web page of a specific house to get additional data to
+           be loaded in the final item.
+        '''
+        async with aiohttp.ClientSession() as session:
+            async with session.get(href) as sub_response:
+                additional_data = await sub_response.text()
+                # logging.debug(f"ADDITIONAL DATA = {additional_data}")
+                return additional_data
+    
+    def get_additional_data_object(self, selector) -> dict:
+        ''' Get dictionary with additional data from individual house pages.
+
+        :param selector: The `~scrapy.Selector` relative to which 
+            :attr:`self.xpath_house_page` will be applied.
+        :type selector: :class:`~scrapy.Selector` object.
+        '''
+        # Get raw data
+        xpath = self.xpath_additional_data_object
+        raw_object = selector.xpath(xpath).get()
+
+        # Parse to python dictionary and return
+        return json.loads(raw_object)
+
+    async def parse_onsale_list(self, response):
         '''Basic callback method
         
         Returns
@@ -119,10 +152,10 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
         house_list = response.xpath(self.xpath_onsale_list)
         for house in house_list:
             # Create house selector from house text
-            house = Selector(text=house.get())
+            house_selector = Selector(text=house.get())
 
             # Create Item Loader
-            house_loader = HouseLoader(House(), selector=house) 
+            house_loader = HouseLoader(House(), selector=house_selector) 
             house_loader.add_value('city', self.city)
             house_loader.add_xpath('price', self.xpath_price)
             house_loader.add_xpath('title', self.xpath_title)
@@ -133,23 +166,19 @@ class ImmobiliareOnSaleSpider(OnSaleSpider):
             house_loader.add_xpath('is_luxury', self.xpath_is_luxury)
 
             # Get href for nested Request
-            house_href = house.xpath()
+            house_href = house.xpath(self.xpath_href).get()
+            additional_data_text = asyncio.run(self.parse_sub_page(house_href))
+            additional_data_object = self.get_additional_data_object(Selector(text=additional_data_text))
+            logging.debug(f"ADDITIONAL DATA OBJECT = {additional_data_object['listing']}")
+            # Collect rest of information from nested Request
+            break
+            
             
             # house_loader.add_xpath
             yield house_loader.load_item()
 
 
-    def parse_house_page(self, response):
-        '''Parse page of single house item'''
-        logging.debug("Parsing house page item")
-        HouseItemLoader = HouseLoader(item=House(), response=response)
-        for k,v in response.meta.items():
-            HouseItemLoader.add_value(k, v)
-        # Finish loading House Item
-        # HouseItemLoader.add_value('test', 'test')
-        yield HouseItemLoader.load_item()
 
-    
 
 
 

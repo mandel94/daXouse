@@ -8,8 +8,9 @@ IMMOBILIARE_SELECTORS = {'XPATH_ONSALE_LIST' : '//ul[@data-cy="result-list"]/li[
                          'XPATH_BATHROOMS' : '//li[@aria-label="bagni"]/div/text()',
                          'XPATH_AGENCY' : '//div[@class="in-realEstateListCard__referent"]/img/@alt',
                          'XPATH_TITLE' : '//a[@class="in-card__title"]/text()',
-                         'XPATH_HREF' : '//div[@class="in-realEstateListCard__content"]/a/@href',
+                         'XPATH_HREF' : '//a[@class="in-card__title"]/@href',
                          'XPATH_FLOOR': '//li[@aria-label="piano"]/div/text()',
-                         'XPATH_IS_LUXURY': '//li[@aria-label="lusso"]'}
+                         'XPATH_IS_LUXURY': '//li[@aria-label="lusso"]',
+                         'XPATH_ADDITIONAL_DATA_OBJECT': '//script[@id="js-hydration"]/text()'}
 
 

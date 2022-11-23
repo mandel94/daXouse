@@ -99,14 +99,18 @@ def handle_floor(what_floor: str) -> str:
     if what_floor == 'T': # ground floor
         return GROUND_FLOOR_VALUE
     
- 
-
+def process_district(district: List[str]) -> str:
+    ''''''
+    return district
 
 ## Output processors
 
 def unlist_value(x: list[T]) -> Union[T, None]:
     ''''''
     try:
+        logging.info(f'{x}')
+        if x[0] == 'NoLo':
+            logging.debug('NoLo found')
         return x[0]
     except:
         return None
